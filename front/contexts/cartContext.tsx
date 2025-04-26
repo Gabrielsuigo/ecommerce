@@ -53,3 +53,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     </CartContexts.Provider>
   );
 };
+
+
+

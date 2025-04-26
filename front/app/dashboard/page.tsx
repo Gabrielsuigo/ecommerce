@@ -20,15 +20,16 @@ const page = () => {
             Dashboard
           </h1>
         </div>
-
-        {/* User Info */}
-        <div className="bg-gray-800 text-gray-100 p-8 rounded-3xl shadow-lg transform transition duration-300 hover:scale-105">
+ 
+         <div className="bg-gray-800 text-gray-100 p-8 rounded-3xl shadow-lg transform transition duration-300 hover:scale-105">
           <h2 className="text-4xl font-semibold text-center text-indigo-400">{user?.name}</h2>
-          <div className="text-center space-y-3 mt-6">
+
+         <div className="text-center space-y-3 mt-6">
             <h3 className="text-lg font-medium text-gray-400"> 📧 {user?.email}</h3>
             <h4 className="text-lg text-gray-400"> 📞 {user?.phone}</h4>
             <h5 className="text-gray-500 text-lg"> 🏠 {user?.address}</h5>
-          </div>
+          </div>  
+
         </div>
 
         {/* Orders Section */}
@@ -42,10 +43,8 @@ const page = () => {
                   className="bg-gray-700 p-6 rounded-2xl shadow-xl hover:shadow-2xl transform transition duration-300 hover:scale-105"
                 >
                   
-                  <p className="text-lg font-medium text-gray-100">🧾Order ID: {order.id}</p>
-
-                  {/* <p className="text-gray-300">Date: {<FormatData></FormatData>(order.date)}</p> */}
-                  {/* Aquí puedes agregar más detalles, como el estado del pedido o la fecha */}
+                  <p className="text-lg font-medium text-gray-100">🧾Order N°: {order.id}</p>
+            
                 </div>
               ))}
             </div>
@@ -62,5 +61,4 @@ export default page;
 
 
 
-        
 

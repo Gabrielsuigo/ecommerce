@@ -20,7 +20,7 @@ const Card = ({ name, image, price, id }: CardProps) => {
         />
 
         {/* Product Price */}
-        <p className="text-lg font-medium">Precio u$s {price}</p>
+        <p className="text-lg font-medium"> u$s {price}</p>
       </article>
     </Link>
   );

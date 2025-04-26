@@ -67,9 +67,14 @@ const RegisterForm = () => {
       className="max-w-sm mx-auto flex flex-col gap-6 p-8 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 text-white rounded-3xl shadow-xl"
       onSubmit={(e) => handleSubmit(e)}
     >
-      <h2 className="text-3xl font-semibold text-center mb-6">Create Account</h2>
-      
-      {/* Email */}
+
+      <div className="text-center mb-6">
+  <h2 className="text-4xl font-bold bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 bg-clip-text text-transparent drop-shadow-lg">
+    Creá una cuenta
+  </h2>
+  <p className="mt-2 text-gray-300 text-sm">Registrate para comenzar tu experiencia</p>
+</div>
+
       <label htmlFor="email" className="text-lg font-medium">Email</label>
       <input
         className="bg-gray-700 text-white rounded-lg p-3 mt-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -82,12 +87,11 @@ const RegisterForm = () => {
       />
       {dirty.email && <p className="text-red-600 mt-1">{errors.email}</p>}
 
-      {/* Password */}
       <label htmlFor="password" className="text-lg font-medium">Password</label>
       <input
         className="bg-gray-700 text-white rounded-lg p-3 mt-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         type="password"
-        placeholder="Password"
+        placeholder="********"
         name="password"
         onChange={(e) => handleChange(e)}
         value={Data.password}
@@ -95,7 +99,6 @@ const RegisterForm = () => {
       />
       {dirty.password && <p className="text-red-600 mt-1">{errors.password}</p>}
 
-      {/* Name */}
       <label htmlFor="name" className="text-lg font-medium">Name y Last name</label>
       <input
         className="bg-gray-700 text-white rounded-lg p-3 mt-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -109,7 +112,6 @@ const RegisterForm = () => {
       />
       {dirty.name && <p className="text-red-600 mt-1">{errors.name}</p>}
 
-      {/* Address */}
       <label htmlFor="address" className="text-lg font-medium">Address</label>
       <input
         className="bg-gray-700 text-white rounded-lg p-3 mt-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -123,7 +125,6 @@ const RegisterForm = () => {
       />
       {dirty.address && <p className="text-red-600 mt-1">{errors.address}</p>}
 
-      {/* Phone */}
       <label htmlFor="phone" className="text-lg font-medium">Phone</label>
       <input
         className="bg-gray-700 text-white rounded-lg p-3 mt-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -137,7 +138,6 @@ const RegisterForm = () => {
       />
       {dirty.phone && <p className="text-red-600 mt-1">{errors.phone}</p>}
 
-      {/* Submit Button */}
       <button
         type="submit"
         className="mt-6 py-3 px-6 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"

@@ -16,7 +16,6 @@ const UserWidget = () => {
 
   return (
     <div className="flex items-center gap-4">
-      {/* Si el usuario no está logueado, mostramos los enlaces de 'Sign In' y 'Register' */}
       {!user?.login ? (
         <>
           <Link
@@ -33,13 +32,13 @@ const UserWidget = () => {
           </button>
         </>
       ) : (
-        // Si el usuario está logueado, mostramos su correo y el botón de 'Sign Out'
+        // Si el usuario está logueado, muestra su nombre 
         <div className="flex items-center gap-3">
           <Link
             href="/dashboard"
             className="text-sm font-semibold text-white hover:text-indigo-400 transition duration-300"
           >
-           👤 {user.user.email}
+           👤 {user.user.name}
           </Link>
           <button
             onClick={logout}

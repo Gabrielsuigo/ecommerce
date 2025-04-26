@@ -3,12 +3,6 @@
 @tailwind utilities;
 
 
-:root {
-    --primary-color: #C9DABF;
-    --secondary-color: #9CA986;
-    --tertary-color: #808D7C;
-    --quaternary-color: #5F6F65;
-}
 body{
     @apply bg-gray-800 flex flex-col min-h-screen;
     display: flex;
@@ -17,7 +11,7 @@ body{
 }
 
 .container{
-    @apply mx-auto max-w-[80%];
+    @apply mx-auto max-w-[95%];
 }
 
 footer{

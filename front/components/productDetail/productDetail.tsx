@@ -21,7 +21,7 @@ const ProductDetail = ({ product }: ProductDetailProps) => {
   const handleAddToCart = () => {
     if (user?.login) {
       if (Array.isArray(cart)) {
-        setCart([...cart, { id, name, price }]);
+        setCart([...cart, { id, name, price}]);
       } else {
         setCart([{ id, name, price }]);
       }
@@ -36,6 +36,8 @@ const ProductDetail = ({ product }: ProductDetailProps) => {
   };
 
   return (
+
+
     <article className="bg-gray-900 text-white rounded-2xl shadow-2xl p-6">
       <h1 className="text-3xl font-semibold mb-4">{name}</h1>
       <div className="flex flex-col lg:flex-row gap-6">

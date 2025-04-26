@@ -33,7 +33,7 @@ export default function RootLayout({
     <AuthProvider>
       <CartProvider>
 
-      <html lang="en" className={secondaryFond.className}>
+      <html >
         <body
           className={`${primeryFond.variable} ${secondaryFond.variable} antialiased`}
           >

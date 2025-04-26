@@ -1,3 +1,6 @@
+
+// Aca hago la comunicacion con el backend para trerme las ordenes. 
+
 import { Cart } from "@/contexts/cartContext";
 
 const  apiUrl=process.env.API_URL || "http://localhost:3001"
@@ -11,12 +14,12 @@ export const postOrders = async (userId:number, token:string, cart: Cart[]) => {
         body: JSON.stringify(Data),
         headers:{
             'Content-Type': 'application/json',
-            'Authorization': token,
+            'Authorization': token
         },
     });
       return await res.json() 
 
-}
+};
 
 
 

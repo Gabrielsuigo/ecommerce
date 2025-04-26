@@ -42,14 +42,15 @@ interface UserSessionData {
     phone:string;
     role:string;
     credential: credential;
-    orders: Order[];
+    orders: Order [];
 }
 
 export interface Order {
     id: number;
-    name ?: string;
+    name?: string;
     status?: string;
-    dated?: string;
+    date?: string;
+    
 }
 interface credential {
     id: number;

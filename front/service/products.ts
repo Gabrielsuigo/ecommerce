@@ -26,7 +26,7 @@ export const getFeaturedProducts = async (): Promise<Product[]> => {
     return featured;
 }
 
-export const getProductsId = async (id: number): Promise<Product> => {
+export const getProductsId = async (id: Number): Promise<Product> => {
     const res = await getProducts();
     const productFilter = res.filter((p)=> p.id === id)[0];
     return productFilter;

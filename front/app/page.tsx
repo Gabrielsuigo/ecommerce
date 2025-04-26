@@ -11,7 +11,7 @@ const page = async () => {
     <Hero/>
       <CarList>
         {products.map((product, i) => (
-          <Card key={i} {...product} variant="primary" />
+          <Card key={i} {...product}/>
         ))}
       </CarList>
     </>
