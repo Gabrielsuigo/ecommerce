@@ -14,7 +14,7 @@ let isFetchFailing = false;
   .catch(() => (isFetchFailing = true));
 
   if (isFetchFailing && ffProductsMock){
-    return productsMock;
+    return productsMock; 
   }
 
   return res;
