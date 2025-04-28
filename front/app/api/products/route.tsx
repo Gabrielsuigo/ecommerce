@@ -1,7 +1,9 @@
 
 export async function GET(){
- return Response.json({
-    response: "OK" })
+ return Response.json(
+    {
+    response: "OK" }
+)
 }
 
     

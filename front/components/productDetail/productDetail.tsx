@@ -20,21 +20,23 @@ const ProductDetail = ({ product }: ProductDetailProps) => {
 
   const handleAddToCart = () => {
     if (user?.login) {
-      if (Array.isArray(cart)) {
-        setCart([...cart, { id, name, price}]);
-      } else {
-        setCart([{ id, name, price }]);
+      const confirmAdd = confirm("¿Deseas agregar este producto al carrito?");
+      if (confirmAdd) {
+        if (Array.isArray(cart)) {
+          setCart([...cart, { id, name, price }]);
+        } else {
+          setCart([{ id, name, price }]);
+        }
+        alert("¡Producto agregado al carrito!");
       }
-
-      alert("Added to cart!");
     } else {
-      alert("Please login to add to cart");
+      alert("Por favor inicia sesión para agregar productos al carrito");
       setTimeout(() => {
         router.push("/login");
       }, 1000);
     }
   };
-
+  
   return (
 
 

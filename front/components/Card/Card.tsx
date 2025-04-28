@@ -9,18 +9,15 @@ const Card = ({ name, image, price, id }: CardProps) => {
       <article
         className="transition-all duration-300 ease-in-out transform hover:scale-105 p-6 rounded-2xl shadow-xl bg-gray-800 text-white hover:shadow-2xl"
       >
-        {/* Product Name */}
         <h3 className="text-xl font-semibold mb-4">{name}</h3>
 
-        {/* Product Image */}
         <img
           src={image}
           alt={name}
           className="w-full h-56 object-cover rounded-lg mb-4"
         />
 
-        {/* Product Price */}
-        <p className="text-lg font-medium"> u$s {price}</p>
+        <p className="text-lg font-medium"> u$s{price}</p>
       </article>
     </Link>
   );

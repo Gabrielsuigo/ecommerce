@@ -25,8 +25,6 @@ const CartDetail = () => {
   return (
     
 
-    
-    
     <div className="max-w-4xl mx-auto my-12 p-8 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 text-white rounded-3xl shadow-2xl">
       {/* Cart Header */}
       <div className="text-center mb-8">
@@ -66,7 +64,7 @@ const CartDetail = () => {
           >
               {cart.length > 0 && (
                 <div className="text-right mt-4 text-lg font-semibold text-indigo-300">
-                  Total: U$s{cart.reduce((acc, item) => acc + item.price, 0)}
+                  Total: u$s{cart.reduce((acc, item) => acc + item.price, 0)}
                 </div>
               )}
           Comprar

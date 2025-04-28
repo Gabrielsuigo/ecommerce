@@ -1,4 +1,3 @@
-import AuthProtected from "@/components/AuthProtected/AuthProtected";
 import Card from "@/components/Card/Card";
 import CarList from "@/components/CarList/CarList";
 import { getProducts } from "@/service/products";

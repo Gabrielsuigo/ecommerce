@@ -44,6 +44,7 @@ const page = () => {
                 >
                   
                   <p className="text-lg font-medium text-gray-100">🧾Order N°: {order.id}</p>
+                  <p className="text-gray-400">📦 Status: {order.status}</p>
             
                 </div>
               ))}
@@ -58,7 +59,5 @@ const page = () => {
 };
 
 export default page;
-
-
 
 

@@ -11,7 +11,7 @@ const res = await fetch(`${apiUrl}/users/register`, {
      },
  });
    return await res.json()  
-}
+};
     
 export const login = async (Data: UserLogin) => {
     const res = await fetch(`${apiUrl}/users/login`, {
