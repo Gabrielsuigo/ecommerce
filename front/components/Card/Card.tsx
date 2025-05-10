@@ -17,7 +17,7 @@ const Card = ({ name, image, price, id }: CardProps) => {
           className="w-full h-56 object-cover rounded-lg mb-4"
         />
 
-        <p className="text-lg font-medium"> u$s{price}</p>
+        <p className="text-lg font-medium"> u$s {price}</p>
       </article>
     </Link>
   );

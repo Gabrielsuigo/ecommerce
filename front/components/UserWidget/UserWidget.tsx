@@ -3,11 +3,11 @@
 import { AuthContexts } from "@/contexts/authContexts";
 import Link from "next/link";
 import { useContext } from "react";
-import { useRouter } from "next/navigation"; // Necesario para redirigir a login después del registro
+import { useRouter } from "next/navigation"; 
 
 const UserWidget = () => {
   const { user, logout } = useContext(AuthContexts);
-  const router = useRouter();  // Para redirigir después del registro
+  const router = useRouter();  
 
   // Manejar el registro, redirigiendo a login después
   const handleRegisterRedirect = () => {
@@ -33,20 +33,22 @@ const UserWidget = () => {
         </>
       ) : (
         // Si el usuario está logueado, muestra su nombre 
+        
         <div className="flex items-center gap-3">
           <Link
             href="/dashboard"
             className="text-sm font-semibold text-white hover:text-indigo-400 transition duration-300"
-          >
+            >
            👤 {user.user.name}
           </Link>
           <button
             onClick={logout}
             className="text-sm font-semibold text-white bg-red-600 hover:bg-red-700 py-1 px-3 rounded-lg transition duration-300"
-          >
+            >
             Sign Out
           </button>
         </div>
+            
       )}
     </div>
   );

@@ -10,7 +10,7 @@ export interface Cart {
 
 // creo interface del context
 interface CartContextProps {
-  // tipos de lo que comparto
+  
   cart: Cart[];
   setCart: (cart: Cart[]) => void;
   emptyCart: () => void;
@@ -24,7 +24,6 @@ export const CartContexts = createContext<CartContextProps>({
   emptyCart: () => {},
 });
 
-// Crear el provider
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 

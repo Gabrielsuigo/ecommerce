@@ -3,7 +3,6 @@
 import Link from "next/link";
 import UserWidget from "../UserWidget/UserWidget";
 
-// Suponiendo que tienes una lista de productos
 import { Product } from "@/app/interfaces"; 
 import { useRouter } from "next/navigation"; 
 import { useState } from "react";
@@ -49,7 +48,6 @@ const Navbar = () => {
     setFilteredProducts([]);
   };
 
-  // Función para manejar la búsqueda al hacer clic en el botón
 
 
 

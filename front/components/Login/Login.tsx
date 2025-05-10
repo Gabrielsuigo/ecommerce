@@ -26,6 +26,7 @@ const Login = () => {
       alert(res.message);
     } else {
       alert("Login successful");
+      
       setUser(res);
       router.push("/");
     }

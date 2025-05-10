@@ -15,7 +15,7 @@ const AuthProtected = ({children}: {children: React.ReactNode}) =>{
            router.push("/login")
        }
        },[]);
-
+ 
    return <>{ children }</>
 }
 

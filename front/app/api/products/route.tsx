@@ -2,7 +2,7 @@
 export async function GET(){
  return Response.json(
     {
-    response: "OK" }
+    response: "todo ok!" }
 )
 }
 

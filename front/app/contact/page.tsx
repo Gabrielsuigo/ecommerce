@@ -4,6 +4,7 @@ import React from "react";
 const contactPage = () => {
 
   return (
+
     <div className="max-w-6xl mx-auto my-12 p-8 bg-gray-800 text-white rounded-3xl shadow-xl">
       <h1 className="text-4xl font-bold text-center text-indigo-500">Contact Us</h1>
       <p className="text-center text-lg mt-4 text-gray-400">

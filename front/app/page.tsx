@@ -6,16 +6,18 @@ import { getFeaturedProducts } from "@/service/products";
 const page = async () => {
   const products = await getFeaturedProducts() 
   return (
-      <>
-
+    <>
     <Hero/>
       <CarList>
-        {products.map((product, i) => (
-          <Card key={i} {...product}/>
-        ))}
+        {products.map((product) => (
+       <Card key={product.id} {...product} />
+      ))}
       </CarList>
     </>
   );
 };
-
 export default page;
+          
+
+
+

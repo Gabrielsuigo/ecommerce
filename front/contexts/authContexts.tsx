@@ -14,7 +14,7 @@ interface AuthContextProps {
   setOrders: (orders: Order[]) => void;
 }
 
-// Creo el contexto, aca vamos a guardar los datos
+// aca guardo los datos
 export const AuthContexts = createContext<AuthContextProps>({
   user: null,
   orders: [],
@@ -24,7 +24,6 @@ export const AuthContexts = createContext<AuthContextProps>({
 });
 
 
-// Crear el provider
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<UserSession | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
@@ -33,10 +32,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
-      
       setOrders(user?.user.orders || []);
     }
   }, [user]);
+      
 
   useEffect(() => {
     const localUser = JSON.parse(localStorage.getItem("user")!);

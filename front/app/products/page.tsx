@@ -10,12 +10,13 @@ const page = async () => {
 
     <CarList>
       {Array.isArray(products)
-        ? products.map((product, i) => (
-          <Card key={i} {...product} />
+        ? products.map((product) => (
+          <Card key={product.id} {...product} />
         ))
         : null}
     </CarList>
   );
 };
+
 
 export default page;
