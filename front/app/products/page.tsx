@@ -7,16 +7,13 @@ const page = async () => {
 
   return (
     
-
     <CarList>
       {Array.isArray(products)
-        ? products.map((product) => (
-          <Card key={product.id} {...product} />
-        ))
-        : null}
-    </CarList>
-  );
+? products.map((product) => (
+  <Card key={product.id} {...product} />
+))
+: null}
+        </CarList>
+);
 };
-
-
 export default page;

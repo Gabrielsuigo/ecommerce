@@ -1,13 +1,13 @@
 "use client";
 
-import { AuthContexts } from "@/contexts/authContexts";
+import { AuthContext } from "@/contexts/AuthContext";
 import Link from "next/link";
 import { useContext } from "react";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 
 const UserWidget = () => {
-  const { user, logout } = useContext(AuthContexts);
-  const router = useRouter();  
+  const { user, logout } = useContext(AuthContext);
+  const router = useRouter();
 
   // Manejar el registro, redirigiendo a login después
   const handleRegisterRedirect = () => {
@@ -22,7 +22,7 @@ const UserWidget = () => {
             href="/login"
             className="text-sm font-semibold text-white hover:text-indigo-400 transition duration-300"
           >
-          👤  Sign In
+            👤 Sign In
           </Link>
           <button
             onClick={handleRegisterRedirect}
@@ -32,23 +32,22 @@ const UserWidget = () => {
           </button>
         </>
       ) : (
-        // Si el usuario está logueado, muestra su nombre 
-        
+        // Si el usuario está logueado, muestra su nombre
+
         <div className="flex items-center gap-3">
           <Link
             href="/dashboard"
             className="text-sm font-semibold text-white hover:text-indigo-400 transition duration-300"
-            >
-           👤 {user.user.name}
+          >
+            👤 {user.user.name}
           </Link>
           <button
             onClick={logout}
             className="text-sm font-semibold text-white bg-red-600 hover:bg-red-700 py-1 px-3 rounded-lg transition duration-300"
-            >
+          >
             Sign Out
           </button>
         </div>
-            
       )}
     </div>
   );

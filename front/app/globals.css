@@ -4,12 +4,9 @@
 
 
 body{
-    @apply bg-gray-800 flex flex-col min-h-screen;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+    @apply bg-gray-600 flex flex-col min-h-screen;
+   
 }
-
 .container{
     @apply mx-auto max-w-[95%];
 }
@@ -18,7 +15,7 @@ footer{
    @apply mt-auto;
 }
 
-h1,
+/* h1,
 h2,
 h3,
 h4,
@@ -26,4 +23,4 @@ h5,
 h6 {
     font-family: var(--primary-font);
     @apply font-bold;
-}
+} */

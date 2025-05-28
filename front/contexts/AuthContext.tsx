@@ -1,11 +1,9 @@
 "use client";
 
-import { Order, UserSession } from "@/app/interfaces";
+import { createContext, useEffect, useState, useContext } from "react";
 import { useRouter } from "next/navigation";
-import { createContext, useEffect, useState } from "react";
+import { Order, UserSession } from "@/app/interfaces";
 
-
-// creo interface del context
 interface AuthContextProps {
   user: UserSession | null;
   setUser: (user: UserSession | null) => void;
@@ -14,15 +12,13 @@ interface AuthContextProps {
   setOrders: (orders: Order[]) => void;
 }
 
-// aca guardo los datos
-export const AuthContexts = createContext<AuthContextProps>({
+const AuthContext = createContext<AuthContextProps>({
   user: null,
-  orders: [],
   setUser: () => {},
   logout: () => {},
+  orders: [],
   setOrders: () => {},
 });
-
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<UserSession | null>(null);
@@ -30,33 +26,35 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user));
-      setOrders(user?.user.orders || []);
+    const localUser = localStorage.getItem("user");
+    if (localUser) {
+      const parsedUser = JSON.parse(localUser);
+      setUser(parsedUser);
+      setOrders(parsedUser?.user?.orders || []);
     }
-  }, [user]);
-      
-
-  useEffect(() => {
-    const localUser = JSON.parse(localStorage.getItem("user")!);
-    setUser(localUser);
   }, []);
 
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+      setOrders(user.user.orders || []);
+    }
+  }, [user]);
+
   const logout = () => {
-    const confirmLogout = confirm("¿Deseas cerrar sesión?");
-    if (confirmLogout) {
+    if (confirm("¿Deseas cerrar sesión?")) {
       localStorage.removeItem("user");
       setUser(null);
       router.push("/login");
     }
   };
 
- 
-
   return (
-    
-    <AuthContexts.Provider value={{ user, setUser, logout, orders, setOrders }}>
+    <AuthContext.Provider value={{ user, setUser, logout, orders, setOrders }}>
       {children}
-    </AuthContexts.Provider>
+    </AuthContext.Provider>
   );
 };
+
+export const useAuth = () => useContext(AuthContext);
+export { AuthContext };

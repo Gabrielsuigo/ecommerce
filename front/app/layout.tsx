@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
-import { AuthProvider } from "@/contexts/authContexts";
+import { AuthProvider } from "@/contexts/AuthContext";
 import "./globals.css";
-import { CartProvider } from "@/contexts/cartContext";
-
-
+import { CartProvider } from "@/contexts/CartContext";
 
 export const metadata: Metadata = {
   title: "webpt21b",
@@ -18,20 +16,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    
-        <AuthProvider>
+    <AuthProvider>
+      <html>
+        <body>
           <CartProvider>
-    
-          <html >
-            <body>
-              <Navbar/>
-              <main className="container">{children}</main>
-              <Footer/>
-            </body>
-          </html>
-              </CartProvider>
-        </AuthProvider>
-      );
-    }
-
-          
+            <Navbar />
+            <main className="container">{children}</main>
+            <Footer />
+          </CartProvider>
+        </body>
+      </html>
+    </AuthProvider>
+  );
+}

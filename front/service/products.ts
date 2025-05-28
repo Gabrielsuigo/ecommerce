@@ -7,6 +7,7 @@ import { productsMock } from "@/app/mocks/products";
 const ffProductsMock = process.env.NEXT_PUBLIC_FF_PRODUCTS_MOCK === "true";
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
+
 export const getProducts = async (): Promise<Product[]> => {
 
 let isFetchFailing = false;

@@ -59,7 +59,14 @@ interface credential {
     password: string
 }
 
+ export interface SearchBarProps {
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSearch: () => void;
+}
 
 
-
-
+export interface ProductListProps {
+  products: Product[];
+  onClick: () => void;
+}

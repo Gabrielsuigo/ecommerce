@@ -3,17 +3,17 @@
 
 import { Product } from "@/app/interfaces";
 import { useContext } from "react";
-import { AuthContexts } from "@/contexts/authContexts";
+import { AuthContext } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { CartContexts } from "@/contexts/cartContext";
+import { CartContext } from "@/contexts/CartContext";
 
 interface ProductDetailProps {
   product: Product;
 }
 
 const ProductDetail = ({ product }: ProductDetailProps) => {
-  const { user } = useContext(AuthContexts);
-  const { cart, setCart } = useContext(CartContexts);
+  const { user } = useContext(AuthContext);
+  const { cart, setCart } = useContext(CartContext);
   const router = useRouter();
   const { id, name, price, image, description } = product;
   const isOnCart = cart?.some((item) => item.id === id);

@@ -1,13 +1,12 @@
 "use client";
-
-import { AuthContexts } from "@/contexts/authContexts";
+import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 
 const AuthProtected = ({children}: {children: React.ReactNode}) =>{
 
     const router = useRouter();
-    const context = useContext(AuthContexts);
+    const context = useAuth()
     const user = context.user?.user;
 
     useEffect(() =>{

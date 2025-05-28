@@ -1,7 +1,7 @@
 
 // Aca hago la comunicacion con el backend para trerme las ordenes. 
 
-import { Cart } from "@/contexts/cartContext";
+import { Cart } from "@/contexts/CartContext";
 
 const  apiUrl=process.env.API_URL || "http://localhost:3001"
 
