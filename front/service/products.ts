@@ -1,48 +1,34 @@
 import { Product } from "@/app/interfaces";
-import { productsMock } from "@/app/mocks/products";
 
-// const ffProductsMock = process.env.FF_PRODUCTS_MOCK || false
-// const  apiUrl = process.env.API_URL || "http://localhost:3001"
-
-const ffProductsMock = process.env.NEXT_PUBLIC_FF_PRODUCTS_MOCK === "true";
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 
+// Obtener todos los productos
 export const getProducts = async (): Promise<Product[]> => {
+  const res = await fetch(`${apiUrl}/products`, { cache: "no-store" });
 
-let isFetchFailing = false;
-
-  const res = await fetch(apiUrl + "/products", {
-    cache: "no-store",
-  })
-  .then((res) => res.json())
-  .catch(() => (isFetchFailing = true));
-
-  if (isFetchFailing && ffProductsMock){
-    return productsMock; 
+  if (!res.ok) {
+    throw new Error("Error al obtener productos desde la API");
   }
 
-  return res;
+  const data = await res.json();
+  return data;
 };
 
+// Obtener los productos destacados (primeros 3)
 export const getFeaturedProducts = async (): Promise<Product[]> => {
-    const res = await getProducts();
-    const featured = Array.isArray(res) && res.length > 3 ? res.slice(0, 3) : [];
-    return featured;
-}
+  const products = await getProducts();
+  return products.slice(0, 3);
+};
 
-export const getProductsId = async (id: Number): Promise<Product> => {
-    const res = await getProducts();
-    const productFilter = res.find((p) => p.id === id);
-    
-  if (!productFilter) {
+// Obtener un producto por su ID
+export const getProductsId = async (id: number): Promise<Product> => {
+  const products = await getProducts();
+  const product = products.find((p) => p.id === id);
+
+  if (!product) {
     throw new Error("Producto no encontrado");
   }
-    
-    // const productFilter = res.filter((p)=> p.id === id)[0];
-    return productFilter;
-  }
 
-
-
-
+  return product;
+};

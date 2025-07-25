@@ -2,21 +2,21 @@
 import { SearchBarProps } from "@/app/interfaces";
 
 const SearchBar = ({ value, onChange, onSearch }: SearchBarProps) => (
-  <div className="flex items-center bg-gray-800 rounded-lg px-4 py-2 w-2/5">
+  <div className="flex items-center bg-white dark:bg-neutral-800 rounded-xl px-1 py-1 w-full max-w-xl shadow-md transition-colors duration-300">
     <input
       type="text"
-      placeholder="Search for products..."
-      className="bg-transparent text-white placeholder-gray-400 outline-none w-full py-2 px-4 rounded-lg focus:ring-2 focus:ring-indigo-500 transition duration-300"
+      placeholder="Buscar productos..."
+      className="bg-transparent text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400 outline-none w-full py-2 px-3 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white transition-all duration-300"
       value={value}
       onChange={onChange}
     />
-    <button
+    {/* <button
       onClick={onSearch}
-      className="ml-2 text-white bg-indigo-600 hover:bg-indigo-700 py-2 px-4 rounded-lg shadow-md focus:outline-none transition duration-300"
+      className="ml-2 bg-black text-white hover:bg-gray-800 dark:hover:bg-white dark:hover:text-black py-2 px-4 rounded-lg transition-all duration-300"
     >
-      Search
-    </button>
+      Buscar
+    </button> */}
   </div>
 );
 
-export default SearchBar
+export default SearchBar;

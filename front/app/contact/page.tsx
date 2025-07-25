@@ -1,18 +1,13 @@
-import React from "react";
-
-
 const contactPage = () => {
-
   return (
-
-    <div className="max-w-6xl mx-auto my-12 p-8 bg-gray-800 text-white rounded-3xl shadow-xl">
-      <h1 className="text-4xl font-bold text-center text-indigo-500">Contact Us</h1>
-      <p className="text-center text-lg mt-4 text-gray-400">
-        We would love to hear from you! Please reach out to us for any questions or support.
+    <div className="max-w-3xl mx-auto my-20 p-10 bg-white text-black rounded-3xl shadow-xl border border-neutral-200">
+      <h1 className="text-4xl font-bold text-center mb-4">📩 Contactanos</h1>
+      <p className="text-center text-lg text-neutral-600 mb-8">
+        Nos encantaría saber de vos. Si tenés dudas o necesitás soporte, escribinos.
       </p>
-      <div className="mt-8 text-center">
-        <p className="text-lg font-semibold">📧 Email: support@store.com</p>
-        <p className="text-lg font-semibold mt-2">📞 Phone: (11) 2503-3874</p>
+      <div className="text-center space-y-4 text-lg font-medium">
+        <p>📧 Email: <span className="font-semibold">support@store.com</span></p>
+        <p>📞 Teléfono: <span className="font-semibold">+54 11 1234-5678</span></p>
       </div>
     </div>
   );

@@ -25,26 +25,57 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [orders, setOrders] = useState<Order[]>([]);
   const router = useRouter();
 
+  // Cargar user y sus órdenes al iniciar
   useEffect(() => {
-    const localUser = localStorage.getItem("user");
-    if (localUser) {
-      const parsedUser = JSON.parse(localUser);
-      setUser(parsedUser);
-      setOrders(parsedUser?.user?.orders || []);
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+
+        setUser(parsedUser);
+
+        const storedOrders = localStorage.getItem(
+          `orders-${parsedUser.user.id}`
+        );
+        if (storedOrders) {
+          setOrders(JSON.parse(storedOrders));
+        }
+      } catch {
+        setUser(null);
+        setOrders([]);
+      }
     }
   }, []);
 
+  // Guardar user si cambia
   useEffect(() => {
     if (user) {
-      localStorage.setItem("user", JSON.stringify(user));
-      setOrders(user.user.orders || []);
+      const storedOrders = localStorage.getItem(`orders-${user.user.id}`);
+      if (storedOrders) {
+        setOrders(JSON.parse(storedOrders));
+      } else {
+        setOrders([]);
+      }
     }
   }, [user]);
 
+  // Guardar órdenes asociadas al usuario
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem(`orders-${user.user.id}`, JSON.stringify(orders));
+    }
+  }, [orders, user]);
+
   const logout = () => {
     if (confirm("¿Deseas cerrar sesión?")) {
-      localStorage.removeItem("user");
+      if (user) {
+        // Limpia las órdenes del usuario actual solo del contexto
+        localStorage.removeItem(`orders-${user.user.id}`);
+        localStorage.removeItem("user");
+      }
       setUser(null);
+      setOrders([]);
       router.push("/login");
     }
   };

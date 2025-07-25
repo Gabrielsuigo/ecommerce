@@ -3,32 +3,56 @@
 import { login } from "@/service/auth";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import { FormEvent, useContext, useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { validateEmail, validatePassword } from "@/helpers/validation";
 
 const Login = () => {
   const { setUser } = useAuth();
   const router = useRouter();
 
-  const initialData = { email: "", password: "" };
-  const initialDirty = { email: false, password: false };
+  const [Data, setData] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState({ email: "", password: "" });
+  const [dirty, setDirty] = useState({ email: false, password: false });
+  const [loading, setLoading] = useState (false);
 
-  const [Data, setData] = useState(initialData);
-  const [errors, setErrors] = useState(initialData);
-  const [dirty, setDirty] = useState(initialDirty);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  e.preventDefault();
+  setLoading(true); // ⬅️ Activás el loading
+  try {
     const res = await login(Data);
     if (res.statusCode) {
       alert(res.message);
     } else {
-      alert("Login successful");
-
+      alert("Login exitoso");
       setUser(res);
-      router.push("/");
+      localStorage.setItem("user", JSON.stringify(res));
+      router.push("/dashboard");
     }
-  };
+  } catch (error) {
+    console.error("Error al iniciar sesión:", error);
+    alert("Ocurrió un error inesperado");
+  } finally {
+    setLoading(false); // ⬅️ Lo desactivás siempre al final
+  }
+};
+
+//   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+//     e.preventDefault();
+// setLoadin(false)
+
+//     const res = await login(Data);
+//     setLoadin(true)
+//     if (res.statusCode) {
+//       alert(res.message);
+//     } else {
+//       alert("Login exitoso");
+//       setUser(res);
+//       localStorage.setItem("user", JSON.stringify(res));
+
+//       router.push("/dashboard");
+//     }
+//   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData({ ...Data, [e.target.name]: e.target.value });
@@ -39,63 +63,81 @@ const Login = () => {
   };
 
   useEffect(() => {
-    setErrors({
+    const currentErrors = {
       email: validateEmail(Data.email),
       password: validatePassword(Data.password),
-    });
+    };
+    setErrors(currentErrors);
   }, [Data]);
 
   return (
-    <form
-      className="max-w-sm mx-auto flex flex-col gap-6 p-8 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 text-white rounded-3xl shadow-xl"
-      onSubmit={(e) => handleSubmit(e)}
-    >
-      <div className="text-center mb-6">
-        <h2 className="text-4xl font-bold bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 bg-clip-text text-transparent drop-shadow-lg">
-          Iniciá sesión
-        </h2>
-        <p className="mt-2 text-gray-300 text-sm">
-          Accedé a tu cuenta para continuar
-        </p>
-      </div>
-
-      <label htmlFor="email" className="text-lg font-medium">
-        Email
-      </label>
-      <input
-        className="bg-gray-700 text-white rounded-lg p-3 mt-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        type="email"
-        id="email"
-        placeholder="name@flowbite.com"
-        name="email"
-        value={Data.email}
-        onChange={handleChange}
-        onBlur={handleBlur}
-      />
-      {dirty.email && <p className="text-red-600 mt-1">{errors.email}</p>}
-
-      <label htmlFor="password" className="text-lg font-medium">
-        Password
-      </label>
-      <input
-        className="bg-gray-700 text-white rounded-lg p-3 mt-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        type="password"
-        id="password"
-        name="password"
-        value={Data.password}
-        placeholder="********"
-        onChange={handleChange}
-        onBlur={handleBlur}
-      />
-      {dirty.password && <p className="text-red-600 mt-1">{errors.password}</p>}
-
-      <button
-        type="submit"
-        className="mt-6 py-3 px-6 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+    <div className="flex items-center justify-center min-h-screen text-black bg-transparent">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-md space-y-6 p-8 rounded-3xl border border-neutral-300 shadow-xl bg-white/70 backdrop-blur-sm"
       >
-        Login
-      </button>
-    </form>
+        <div className="text-center">
+          <h2 className="text-3xl font-bold tracking-tight">Iniciá sesión</h2>
+          <p className="text-sm text-neutral-500 mt-1">
+            Accedé a tu cuenta para continuar
+          </p>
+        </div>
+
+        <div>
+          <label htmlFor="email" className="block text-sm font-medium">
+            Email
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            value={Data.email}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            placeholder="nombre@correo.com"
+            className="mt-1 w-full p-3 rounded-xl bg-neutral-100 border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-black"
+          />
+          {dirty.email && errors.email && (
+            <p className="text-sm text-red-600 mt-1">{errors.email}</p>
+          )}
+        </div>
+
+        <div>
+          <label htmlFor="password" className="block text-sm font-medium">
+            Contraseña
+          </label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autoComplete="current-password"
+            value={Data.password}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            placeholder="********"
+            className="mt-1 w-full p-3 rounded-xl bg-neutral-100 border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-black"
+          />
+          {dirty.password && errors.password && (
+            <p className="text-sm text-red-600 mt-1">{errors.password}</p>
+          )}
+        </div>
+
+        <button
+  type="submit"
+  className={`w-full py-3 rounded-xl text-white font-semibold transition duration-200 ${
+    loading
+      ? "bg-gray-400 cursor-not-allowed"
+      : "bg-black hover:bg-neutral-800"
+  }`}
+  disabled={loading}
+>
+  {loading ? "Cargando..." : "Iniciar sesión"}
+</button>
+
+    
+      </form>
+    </div>
   );
 };
 

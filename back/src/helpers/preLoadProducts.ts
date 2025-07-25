@@ -63,13 +63,33 @@ const productsToPreLoad: IProduct[] = [
     stock: 10,
   },
   {
-    name: "HomePod",
-    price:  299,
+    name: "HomePo",
+    price: 299,
     description:
       "Elevate your home audio experience with the HomePod: immersive sound, intelligent assistant, and smart home hub make the HomePod mini the perfect addition to your home. Enjoy a world of music, news, and more with the HomePod.",
     image:
       "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/homepod-202210-gallery-4?wid=4062&hei=2400&fmt=jpeg&qlt=90&.v=1669944429825",
     categoryId: 6,
+    stock: 10,
+  },
+   {
+    name: "HomePo",
+    price: 299,
+    description:
+      "Elevate your home audio experience with the HomePod: immersive sound, intelligent assistant, and smart home hub make the HomePod mini the perfect addition to your home. Enjoy a world of music, news, and more with the HomePod.",
+    image:
+      "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/homepod-202210-gallery-4?wid=4062&hei=2400&fmt=jpeg&qlt=90&.v=1669944429825",
+    categoryId: 7,
+    stock: 10,
+  },
+     {
+    name: "HomePo",
+    price: 299,
+    description:
+      "Elevate your home audio experience with the HomePod: immersive sound, intelligent assistant, and smart home hub make the HomePod mini the perfect addition to your home. Enjoy a world of music, news, and more with the HomePod.",
+    image:
+      "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/homepod-202210-gallery-4?wid=4062&hei=2400&fmt=jpeg&qlt=90&.v=1669944429825",
+    categoryId: 8,
     stock: 10,
   },
 ];
