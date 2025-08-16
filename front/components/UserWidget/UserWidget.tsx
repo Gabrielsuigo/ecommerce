@@ -3,15 +3,10 @@
 import { AuthContext } from "@/contexts/AuthContext";
 import Link from "next/link";
 import { useContext } from "react";
-import { useRouter } from "next/navigation";
 
 const UserWidget = () => {
   const { user, logout } = useContext(AuthContext);
-  const router = useRouter();
 
-  const handleRegisterRedirect = () => {
-    router.push("/register");
-  };
 
   return (
     <div className="flex items-center gap-4">
@@ -23,12 +18,12 @@ const UserWidget = () => {
           >
             👤 Sign In
           </Link>
-          <button
-            onClick={handleRegisterRedirect}
+          <Link
+            href="/register"
             className="text-sm font-semibold text-black dark:text-white border border-black dark:border-white hover:bg-neutral-100 dark:hover:bg-neutral-800 py-1 px-3 rounded-lg transition duration-300"
           >
             Register
-          </button>
+          </Link>
         </>
       ) : (
         <div className="flex items-center gap-3">
@@ -42,7 +37,7 @@ const UserWidget = () => {
             onClick={logout}
             className="text-sm font-semibold text-black dark:text-white border border-black dark:border-white hover:bg-neutral-100 dark:hover:bg-neutral-800 py-1 px-3 rounded-lg transition duration-300"
           >
-            Sign Out
+            Log Out
           </button>
         </div>
       )}
