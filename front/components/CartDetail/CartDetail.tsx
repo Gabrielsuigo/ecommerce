@@ -3,6 +3,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { postOrders } from "@/service/orders";
 import { useState } from "react";
+import Swal from "sweetalert2";
+
 
 const CartDetail = () => {
   const { user, orders, setOrders } = useAuth();
@@ -55,9 +57,12 @@ const CartDetail = () => {
       );
 
       // Guardo usuario
-      localStorage.setItem("user", JSON.stringify(user));
-      alert(`Order ID: ${res.id}`);
-
+  Swal.fire({
+  title: "Pedido realizado",
+  text: `Order ID: ${res.id}`,
+  icon: "success",
+  confirmButtonText: "Aceptar",
+});
       emptyCart();
     } else {
       alert("Error al procesar la orden");

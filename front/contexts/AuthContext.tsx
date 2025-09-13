@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (user) {
       localStorage.setItem(`orders-${user.user.id}`, JSON.stringify(orders));
     }
-  }, [orders, user]);h
+  }, [orders, user]);
 
   const logout = () => {
     Swal.fire({
