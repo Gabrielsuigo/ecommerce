@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import { createContext, useEffect, useState, useContext } from "react";
@@ -10,13 +8,16 @@ export interface Cart {
   name: string;
   price: number;
   quantity: number;
+  image: string; 
+
 }
 
 interface CartContextProps {
   cart: Cart[];
   setCart: (cart: Cart[]) => void;
-  addToCart: (item: Cart) => void;
+  addToCart: (product: Cart) => void;
   emptyCart: () => void;
+  
 }
 
 const CartContext = createContext<CartContextProps>({
@@ -24,9 +25,9 @@ const CartContext = createContext<CartContextProps>({
   setCart: () => {},
   addToCart: () => {},
   emptyCart: () => {},
+  
 });
 
-const CART_EXPIRATION_HOURS = 1;
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [cart, setCart] = useState<Cart[]>([]);
@@ -39,18 +40,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
-          const savedTime = new Date(parsed.timestamp);
-          const now = new Date();
-          const hoursPassed =
-            (now.getTime() - savedTime.getTime()) / (1000 * 60 * 60);
-
-          if (hoursPassed > CART_EXPIRATION_HOURS) {
-            localStorage.removeItem(`cart-${userId}`);
-            setCart([]);
-            alert("Tu carrito expiró por inactividad.");
-          } else {
-            setCart(parsed.items || []);
-          }
+     
+          setCart(parsed.items || []);
         } catch {
           setCart([]);
         }
@@ -64,10 +55,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (userId) {
-      const now = new Date();
       const data = {
         items: cart,
-        timestamp: now.toISOString(),
       };
       localStorage.setItem(`cart-${userId}`, JSON.stringify(data));
     }
@@ -80,17 +69,16 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     setCart([]);
   };
 
-  const addToCart = (item: Cart) => {
+
+  const addToCart = (product: Cart) => {
     setCart((prev) => {
-      const existing = prev.find((p) => p.id === item.id);
+      const existing = prev.find((item) => item.id === product.id);
       if (existing) {
-        return prev.map((p) =>
-          p.id === item.id
-            ? { ...p, quantity: p.quantity + item.quantity }
-            : p
+        return prev.map((item) =>
+          item.id === product.id ? { ...item, quantity: item.quantity + product.quantity } : item
         );
       }
-      return [...prev, item];
+      return [...prev, product];
     });
   };
 

@@ -9,10 +9,15 @@ const page = () => {
   const { cart } = useCart();
   const user = authUser?.user;
 
+  // Pedidos totales
   const totalOrders = orders.length;
+
+  // Ultimo pedido
   const lastOrder = orders[orders.length - 1];
 
+  // Cantidad total
   const totalAmount = orders.reduce((acc, order) => {
+    
     const orderTotal =
       order.products?.reduce(
         (sum, prod) => sum + prod.price * prod.quantity,
@@ -21,19 +26,22 @@ const page = () => {
     return acc + orderTotal;
   }, 0);
 
+  // Total del carrito
   const cartTotal = cart?.length
     ? cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
     : 0;
 
+  // Cantidad del carrito
   const cartQuantity = cart.reduce((sum, product) => sum + product.quantity, 0);
+
 
   return (
     <AuthProtected>
       <div className="flex items-center justify-center min-h-screen bg-transparent text-black dark:text-white px-4">
         <div className="w-full max-w-5xl space-y-10 p-10 rounded-3xl border border-neutral-300 dark:border-neutral-700 shadow-xl bg-white/70 dark:bg-black/40 backdrop-blur-sm">
-          {/* Header */}
           <header className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight">Bienvenido/a</h1>
+            <h1 className="text-4xl font-bold tracking-tight">Bienvenidos</h1>
+
             <p className="text-gray-600 dark:text-gray-400 mt-2 text-base">
               Información general de tu cuenta y actividad reciente
             </p>
@@ -43,7 +51,6 @@ const page = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Columna izquierda - Datos del usuario y resumen */}
             <div className="space-y-6">
-              {/* Resumen */}
               <div className="bg-white/80 dark:bg-black/40 backdrop-blur-md rounded-2xl p-6 border border-gray-300 dark:border-gray-700 max-h-[500px] overflow-y-auto">
                 <h2 className="text-xl font-semibold mb-4">Resumen</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -57,7 +64,7 @@ const page = () => {
                     <p className="text-sm text-gray-500 uppercase mb-1">
                       Último pedido
                     </p>
-                    <p className="text-lg">{lastOrder?.id || "—"}</p>
+                    <p className="text-lg">ID: {lastOrder?.id || "—"}</p>
                   </div>
                   <div className="text-center">
                     <p className="text-sm text-gray-500 uppercase mb-1">
@@ -72,16 +79,17 @@ const page = () => {
                       {" "}
                       Carrito
                     </p>
-
                     <div className="flex justify-center items-center gap-2">
                       <span className="text-sm">Productos</span>
                       <span className="bg-gray-600 text-white text-sm px-2 py-1 rounded-md font-medium">
                         {cartQuantity}
                       </span>
                     </div>
-  <div className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200 px-3 py-1 rounded-xl inline-flex items-center shadow-md">
-  <span className="text-xl font-semibold">${cartTotal.toFixed(2)}</span>
-</div>
+                    <div className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200 px-3 py-1 rounded-xl inline-flex items-center shadow-md">
+                      <span className="text-xl font-semibold">
+                        ${cartTotal.toFixed(2)}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -128,11 +136,11 @@ const page = () => {
               {orders.length > 0 ? (
                 <div className="space-y-4">
                   {orders.map((order, i) => {
-                    const orderTotal =
-                      order.products?.reduce(
-                        (sum, p) => sum + p.price * p.quantity,
-                        0
-                      ) || 0;
+                    // const orderTotal =
+                    //   order.products?.reduce(
+                    //     (sum, p) => sum + p.price * p.quantity,
+                    //     0
+                    //   ) || 0;
 
                     return (
                       <div
@@ -143,6 +151,7 @@ const page = () => {
                           <span className="font-medium">
                             Pedido #{order.id}
                           </span>
+
                           <span
                             className={`text-sm font-semibold px-3 py-1 rounded-full ${
                               order.status === "approved"
@@ -161,9 +170,15 @@ const page = () => {
                           </p>
                         )}
 
-                        <p className="text-sm mt-2">
-                          💰 Total: ${orderTotal.toFixed(2)}
-                        </p>
+                        {order.total && (
+                          <p className="text-sm text-gray-500">
+                            💰 Total: {" "}
+                            {order.total.toLocaleString("es-AR", {
+                              style: "currency",
+                              currency: "ARS",
+                            })}
+                          </p>
+                        )}
 
                         {order.products && order.products.length > 0 && (
                           <div className="mt-2 text-sm">

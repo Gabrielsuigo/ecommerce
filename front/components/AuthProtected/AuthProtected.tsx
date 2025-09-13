@@ -1,22 +1,26 @@
 "use client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-const AuthProtected = ({children}: {children: React.ReactNode}) =>{
+export default function AuthProtected ({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+  const { user } = useAuth();
+  const [checked, setChecked] = useState(false);
 
-    const router = useRouter();
-    const context = useAuth()
-    const user = context.user?.user;
+  useEffect(() => {
+    if (!user) {
+      router.push("/login");
+    } else {
+      setChecked(true);
+    }
+  }, [user, router]);
 
-    useEffect(() =>{
-       if(!user){
-           router.push("/login")
-       }
-       },[]);
- 
-   return <>{ children }</>
-}
+  if (!checked) {
+    return null; 
+  }
 
-export default AuthProtected
+  return <>{children}</>;
+};
+
 

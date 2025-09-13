@@ -1,7 +1,12 @@
 "use client";
-import { SearchBarProps } from "@/app/interfaces";
 
-const SearchBar = ({ value, onChange, onSearch }: SearchBarProps) => (
+interface SearchBarProps {
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+
+const SearchBar = ({ value, onChange }: SearchBarProps) => (
   <div className="flex items-center bg-white dark:bg-neutral-800 rounded-xl px-1 py-1 w-full max-w-xl shadow-md transition-colors duration-300">
     <input
       type="text"
@@ -10,12 +15,7 @@ const SearchBar = ({ value, onChange, onSearch }: SearchBarProps) => (
       value={value}
       onChange={onChange}
     />
-    {/* <button
-      onClick={onSearch}
-      className="ml-2 bg-black text-white hover:bg-gray-800 dark:hover:bg-white dark:hover:text-black py-2 px-4 rounded-lg transition-all duration-300"
-    >
-      Buscar
-    </button> */}
+   
   </div>
 );
 

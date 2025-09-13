@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const Hero = () => {
+const  Hero = () => {
   return (
     <header className="my-6 flex flex-col items-center justify-center text-white min-h-[300px] px-4 sm:px-6">
       <div className="bg-black/60 p-8 sm:p-10 rounded-xl w-full max-w-2xl text-center shadow-lg">
@@ -21,6 +21,6 @@ const Hero = () => {
       </div>
     </header>
   );
-};
+}
 
-export default Hero;
+export default Hero

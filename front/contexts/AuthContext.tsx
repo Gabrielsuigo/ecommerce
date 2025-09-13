@@ -32,14 +32,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
-
         setUser(parsedUser);
 
-        const storedOrders = localStorage.getItem(
-          `orders-${parsedUser.user.id}`
+        
+    const userOrders = localStorage.getItem(`orders-${parsedUser.user.id}`
         );
-        if (storedOrders) {
-          setOrders(JSON.parse(storedOrders));
+        if (userOrders) {
+          setOrders(JSON.parse(userOrders));
         }
       } catch {
         setUser(null);
