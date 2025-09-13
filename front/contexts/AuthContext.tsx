@@ -3,6 +3,7 @@
 import { createContext, useEffect, useState, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { Order, UserSession } from "@/app/interfaces";
+import Swal from "sweetalert2";
 
 interface AuthContextProps {
   user: UserSession | null;
@@ -34,9 +35,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const parsedUser = JSON.parse(storedUser);
         setUser(parsedUser);
 
-        
-    const userOrders = localStorage.getItem(`orders-${parsedUser.user.id}`
-        );
+        const userOrders = localStorage.getItem(`orders-${parsedUser.user.id}`);
         if (userOrders) {
           setOrders(JSON.parse(userOrders));
         }
@@ -64,19 +63,29 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (user) {
       localStorage.setItem(`orders-${user.user.id}`, JSON.stringify(orders));
     }
-  }, [orders, user]);
+  }, [orders, user]);h
 
   const logout = () => {
-    if (confirm("¿Deseas cerrar sesión?")) {
-      if (user) {
-        // Limpia las órdenes del usuario actual solo del contexto
-        localStorage.removeItem(`orders-${user.user.id}`);
-        localStorage.removeItem("user");
+    Swal.fire({
+      title: "¿Cerrar sesión?",
+      text: "Tu sesión se cerrará y deberás iniciar nuevamente.",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, cerrar sesión",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (user) {
+          localStorage.removeItem(`orders-${user.user.id}`);
+          localStorage.removeItem("user");
+        }
+        setUser(null);
+        setOrders([]);
+        router.push("/login");
+
+        //
       }
-      setUser(null);
-      setOrders([]);
-      router.push("/login");
-    }
+    });
   };
 
   return (
