@@ -25,7 +25,7 @@ const Navbar = () => {
     const delayDebounce = setTimeout(() => {
       const search = async () => {
         if (searchTerm.trim().length >= 2) {
-          try {
+          try{
             const res = await fetch(
               `${process.env.NEXT_PUBLIC_API_URL}/products?name=${searchTerm}`
             );
