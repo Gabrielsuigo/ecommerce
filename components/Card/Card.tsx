@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { ShoppingCart } from "lucide-react";
+import Swal from "sweetalert2";
 
 interface CardProps extends Product {
   showPrice?: boolean;
@@ -17,20 +18,51 @@ const Card = ({ name, image, price, id, ...rest }: CardProps) => {
   const cartItem = cart.find((item) => item.id === id);
   const quantity = cartItem ? cartItem.quantity : 0;
 
-  const handleCartClick = () => {
+  const handleCartClick = async () => {
     if (!user?.login) {
-      alert("Por favor inicia sesión para agregar productos al carrito.");
+      Swal.fire({
+        icon: "info",
+        title: "Iniciá sesión",
+        text: "Por favor iniciá sesión para agregar productos al carrito.",
+        confirmButtonColor: "#000",
+      });
       return;
     }
 
-  if (cartItem) {
-    alert("Este producto ya está en el carrito. Solo se permite una unidad.");
-    return;
-  }
+    if (cartItem) {
+      Swal.fire({
+        icon: "warning",
+        title: "Producto ya en el carrito",
+        text: "Solo se permite una unidad por producto.",
+        confirmButtonColor: "#000",
+      });
+      return;
+    }
 
-    const product = { id, name, price, quantity: 1, ...rest };
-    addToCart(product);
-    alert("Producto agregado al carrito.");
+    const result = await Swal.fire({
+      title: `¿Agregar "${name}" al carrito?`,
+      text: "Podrás revisarlo antes de finalizar tu compra.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#000",
+      cancelButtonColor: "#aaa",
+      confirmButtonText: "Sí, agregar",
+      cancelButtonText: "Cancelar",
+      reverseButtons: true,
+    });
+
+    if (result.isConfirmed) {
+      const product = { id, name, price, quantity: 1, ...rest };
+      addToCart(product);
+
+      await Swal.fire({
+        icon: "success",
+        title: "¡Producto agregado!",
+        text: `"${name}" fue añadido al carrito.`,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
   };
 
   return (

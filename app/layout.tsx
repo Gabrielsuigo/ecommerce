@@ -6,7 +6,7 @@ import { CartProvider } from "@/contexts/CartContext";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "webpt21b",
+  title: "Apple Store",
   description: "Henry",
 };
 
