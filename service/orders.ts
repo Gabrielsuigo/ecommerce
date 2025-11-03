@@ -20,13 +20,6 @@ export const postOrders = async (
       },
     });
 
-//      if (!res.ok) {
-//     const errorData = await res.json().catch(() => ({}));
-//     throw new Error(errorData.message || "Error al registrar la orden");
-//   }
-
-//   return res.json();
-// };
 
     if (!res.ok) {
       // Si la respuesta no fue exitosa (status fuera del 200–299)

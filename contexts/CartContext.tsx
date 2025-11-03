@@ -14,6 +14,7 @@ interface CartContextProps {
   cart: Cart[];
   setCart: (cart: Cart[]) => void;
   addToCart: (item: Cart) => void;
+  removeFromCart: (id: number) => void;
   emptyCart: () => void;
 }
 
@@ -21,7 +22,9 @@ const CartContext = createContext<CartContextProps>({
   cart: [],
   setCart: () => {},
   addToCart: () => {},
+  removeFromCart: () => {},
   emptyCart: () => {},
+
 });
 
 const CART_EXPIRATION_HOURS = 1;
@@ -76,6 +79,8 @@ useEffect(() => {
     setCart([]);
   };
 
+  
+
 const addToCart = (item: Cart) => {
   setCart((prev) => {
     const exists = prev.some((p) => Number(p.id) === Number(item.id));
@@ -87,8 +92,12 @@ const addToCart = (item: Cart) => {
   });
 };
 
+  const removeFromCart = (id: number) => {
+    setCart((prev) => prev.filter((item) => Number(item.id) !== Number(id)));
+  };
+
   return (
-    <CartContext.Provider value={{ cart, setCart, addToCart, emptyCart }}>
+    <CartContext.Provider value={{ cart, setCart, addToCart, emptyCart,removeFromCart }}>
       {children}
     </CartContext.Provider>
   );

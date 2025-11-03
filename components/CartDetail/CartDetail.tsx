@@ -3,95 +3,127 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Cart, useCart } from "@/contexts/CartContext";
 import { postOrders } from "@/service/orders";
 import { useState } from "react";
+import Swal, { SweetAlertResult } from "sweetalert2";
 
 const CartDetail = () => {
   const { user, orders, setOrders } = useAuth();
-  const { cart, emptyCart } = useCart();
-
-  const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const { cart, emptyCart, removeFromCart } = useCart();
   const [loading, setIsLoading] = useState<boolean>(false);
 
-const handleBuy = async () => {
-  setIsLoading(true);
+  const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-  try {
-    // Validación: buscar productos repetidos ya comprados
-    const purchasedProductIds =
-      Array.isArray(orders) && orders.length > 0
-        ? orders.flatMap((order) =>
-            Array.isArray(order.products)
-              ? order.products.map((p: Cart) => p.id)
-              : []
-          )
-        : [];
+  const handleRemove = (id: number, name: string) => {
+    Swal.fire({
+      title: "¿Eliminar producto?",
+      text: `¿Seguro que deseas eliminar "${name}" del carrito?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    }).then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        removeFromCart(id);
+        Swal.fire({
+          icon: "success",
+          title: "Eliminado",
+          text: `"${name}" fue eliminado del carrito.`,
+          timer: 1500,
+          showConfirmButton: false,
+        });
+      }
+    });
+  };
 
-    const duplicated = cart.find((item) =>
-      purchasedProductIds.includes(item.id)
-    );
+  const handleBuy = async () => {
+    setIsLoading(true);
 
-    if (duplicated) {
-      alert(`⚠️ Ya compraste "${duplicated.name}". Solo se permite una unidad.`);
-      setIsLoading(false);
-      return;
+    try {
+      // Validación: buscar productos repetidos ya comprados
+      const purchasedProductIds =
+        Array.isArray(orders) && orders.length > 0
+          ? orders.flatMap((order) =>
+              Array.isArray(order.products)
+                ? order.products.map((p: Cart) => p.id)
+                : []
+            )
+          : [];
+
+      const duplicated = cart.find((item) =>
+        purchasedProductIds.includes(item.id)
+      );
+
+      if (duplicated) {
+        alert(
+          `⚠️ Ya compraste "${duplicated.name}". Solo se permite una unidad.`
+        );
+        setIsLoading(false);
+        return;
+      }
+
+      // Procesar orden normalmente
+      const res = await postOrders(user?.user.id || 0, user?.token || "", cart);
+
+      if (res.status === "approved") {
+        const newOrder = {
+          id: parseInt(res.id),
+          products: cart,
+          total: total,
+          status: res.status || "approved",
+          createdAt: new Date().toISOString(),
+        };
+
+        setOrders([...orders, newOrder]);
+
+        const fullOrderData = {
+          user: {
+            id: user?.user,
+            name: user?.user.name,
+            email: user?.user.email,
+          },
+          products: cart,
+          total: total,
+          orderId: parseInt(res.id),
+          date: new Date().toISOString(),
+        };
+
+        localStorage.setItem(
+          `compra-${user?.user.id}-${res.id}`,
+          JSON.stringify(fullOrderData)
+        );
+
+        const prevOrders = JSON.parse(
+          localStorage.getItem(`orders-${user?.user.id}`) || "[]"
+        );
+        localStorage.setItem(
+          `orders-${user?.user.id}`,
+          JSON.stringify([...prevOrders, newOrder])
+        );
+
+        localStorage.setItem("user", JSON.stringify(user));
+
+        Swal.fire({
+          icon: "success",
+          title: "Compra realizada ✅",
+          text: `Order ID: ${res.id}`,
+          confirmButtonText: "Aceptar",
+        });
+
+        emptyCart();
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Error en handleBuy:", error.message);
+        Swal.fire("Error", "Ocurrió un error al procesar la orden.", "error");
+      } else {
+        console.error("Error desconocido en handleBuy:", error);
+        Swal.fire("Error", "Ocurrió un error desconocido.", "error");
+      }
     }
 
-    // Procesar orden normalmente
-    const res = await postOrders(user?.user.id || 0, user?.token || "", cart);
-
-    if (res.status === "approved") {
-      const newOrder = {
-        id: parseInt(res.id),
-        products: cart,
-        total: total,
-        status: res.status || "approved",
-        createdAt: new Date().toISOString(),
-      };
-
-      setOrders([...orders, newOrder]);
-
-      const fullOrderData = {
-        user: {
-          id: user?.user,
-          name: user?.user.name,
-          email: user?.user.email,
-        },
-        products: cart,
-        total: total,
-        orderId: parseInt(res.id),
-        date: new Date().toISOString(),
-      };
-
-      localStorage.setItem(
-        `compra-${user?.user.id}-${res.id}`,
-        JSON.stringify(fullOrderData)
-      );
-
-      const prevOrders = JSON.parse(
-        localStorage.getItem(`orders-${user?.user.id}`) || "[]"
-      );
-      localStorage.setItem(
-        `orders-${user?.user.id}`,
-        JSON.stringify([...prevOrders, newOrder])
-      );
-
-      localStorage.setItem("user", JSON.stringify(user));
-
-      alert(`✅ Compra realizada. Order ID: ${res.id}`);
-      emptyCart();
-    }
-} catch (error) {
-  if (error instanceof Error) {
-    console.error("Error en handleBuy:", error.message);
-    alert("Ocurrió un error al procesar la orden.");
-  } else {
-    console.error("Error desconocido en handleBuy:", error);
-    alert("Ocurrió un error desconocido.");
-  }
-}
-
-  setIsLoading(false);
-};
-
+    setIsLoading(false);
+  };
 
   return (
     <div className="max-w-4xl mx-auto my-16 px-6 py-12 bg-white dark:bg-black text-black dark:text-white rounded-3xl border border-gray-300 dark:border-gray-700 shadow-xl transition-colors">
@@ -119,42 +151,52 @@ const handleBuy = async () => {
                   Cantidad: {item.quantity}
                 </p>
               </div>
-              <div className="text-right">
+
+              <div className="flex items-center gap-6">
                 <p className="text-lg font-semibold">
                   ${(+item.price * item.quantity).toFixed(2)}
                 </p>
+
+                <button
+                  onClick={() => handleRemove(item.id, item.name)}
+                  className="px-3 py-2 text-sm font-semibold rounded-lg bg-red-600 text-white hover:bg-red-700 transition-all"
+                >
+                  🗑️ Eliminar
+                </button>
               </div>
             </div>
           ))}
         </div>
       )}
 
-      <div className="mt-12 text-center">
-        <p className="text-xl font-semibold mb-4">Total: ${total.toFixed(2)}</p>
-        <div className="flex justify-center">
-          <button
-            onClick={handleBuy}
-            disabled={loading}
-            className={`w-full sm:w-auto px-6 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-3 ${
-              loading
-                ? "bg-gray-400 text-white cursor-not-allowed"
-                : "bg-black text-white dark:bg-white dark:text-black hover:opacity-90"
-            }`}
-          >
-            {loading ? (
-              <>
-                <div className="relative w-5 h-5">
-                  <div className="absolute inset-0 rounded-full border-2 border-t-transparent border-white animate-spin"></div>
-                  <div className="absolute inset-1 rounded-full border-2 border-t-transparent border-gray-300 animate-spin reverse"></div>
-                </div>
-                Procesando...
-              </>
-            ) : (
-              "Comprar"
-            )}
-          </button>
+      {cart.length > 0 && (
+        <div className="mt-12 text-center">
+          <p className="text-xl font-semibold mb-4">Total: ${total.toFixed(2)}</p>
+          <div className="flex justify-center">
+            <button
+              onClick={handleBuy}
+              disabled={loading}
+              className={`w-full sm:w-auto px-6 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-3 ${
+                loading
+                  ? "bg-gray-400 text-white cursor-not-allowed"
+                  : "bg-black text-white dark:bg-white dark:text-black hover:opacity-90"
+              }`}
+            >
+              {loading ? (
+                <>
+                  <div className="relative w-5 h-5">
+                    <div className="absolute inset-0 rounded-full border-2 border-t-transparent border-white animate-spin"></div>
+                    <div className="absolute inset-1 rounded-full border-2 border-t-transparent border-gray-300 animate-spin reverse"></div>
+                  </div>
+                  Procesando...
+                </>
+              ) : (
+                "Comprar"
+              )}
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

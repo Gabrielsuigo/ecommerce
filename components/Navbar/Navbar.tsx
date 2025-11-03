@@ -25,27 +25,19 @@ useEffect(() => {
     if (searchTerm.trim().length >= 2) {
       try {
       
-      const res = await fetch(`/api/products?search=${encodeURIComponent(searchTerm)}`);
-if (res.ok) {
-  const data: Product[] = await res.json();
-  setFilteredProducts(data);
-  setShowResults(data.length > 0);
-} else {
-  setFilteredProducts([]);
-  setShowResults(false);
-}
-        // const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`);
-        // if (res.ok) {
-        //   const data: Product[] = await res.json();
-        //   const filtered = data.filter((product) =>
-        //     product.name.toLowerCase().includes(searchTerm.toLowerCase())
-        //   );
-        //   setFilteredProducts(filtered);
-        //   setShowResults(filtered.length > 0);
-        // } else {
-        //   setFilteredProducts([]);
-        //   setShowResults(false);
-        // }
+
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`);
+        if (res.ok) {
+          const data: Product[] = await res.json();
+          const filtered = data.filter((product) =>
+            product.name.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+          setFilteredProducts(filtered);
+          setShowResults(filtered.length > 0);
+        } else {
+          setFilteredProducts([]);
+          setShowResults(false);
+        }
       } catch (error) {
         console.error("Error buscando productos:", error);
         setFilteredProducts([]);
