@@ -3,6 +3,7 @@
 import { createContext, useEffect, useState, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { Order, UserSession } from "@/app/interfaces";
+import Swal from "sweetalert2";
 
 interface AuthContextProps {
   user: UserSession | null;
@@ -32,12 +33,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
-
         setUser(parsedUser);
 
-        const storedOrders = localStorage.getItem(
-          `orders-${parsedUser.user.id}`
-        );
+        const storedOrders = localStorage.getItem(`orders-${parsedUser.user.id}`);
         if (storedOrders) {
           setOrders(JSON.parse(storedOrders));
         }
@@ -67,15 +65,37 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [orders, user]);
 
-  const logout = () => {
-    if (confirm("¿Deseas cerrar sesión?")) {
+  const logout = async () => {
+    const result = await Swal.fire({
+      title: "¿Cerrar sesión?",
+      text: "Tu sesión actual se cerrará y se eliminarán tus datos locales.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#000",
+      cancelButtonColor: "#aaa",
+      confirmButtonText: "Sí, cerrar sesión",
+      cancelButtonText: "Cancelar",
+      reverseButtons: true,
+    });
+
+    if (result.isConfirmed) {
       if (user) {
-        // Limpia las órdenes del usuario actual solo del contexto
+        // Limpia datos del usuario actual
         localStorage.removeItem(`orders-${user.user.id}`);
         localStorage.removeItem("user");
       }
+
       setUser(null);
       setOrders([]);
+
+      await Swal.fire({
+        icon: "success",
+        title: "Sesión cerrada",
+        text: "Cerraste sesión correctamente.",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+
       router.push("/login");
     }
   };

@@ -5,9 +5,9 @@ import { useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/contexts/CartContext";
-
 import { Button } from "@mui/material";
 import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
+import Swal from "sweetalert2";
 
 interface ProductDetailProps {
   product: Product;
@@ -19,17 +19,45 @@ const ProductDetail = ({ product }: ProductDetailProps) => {
   const router = useRouter();
   const { id, name, price, image, description } = product;
 
-const isOnCart = cart?.some((item) => Number(item.id) === Number(id));
+  const isOnCart = cart?.some((item) => Number(item.id) === Number(id));
 
-const handleAddToCart = () => {
-  if (user?.login) {
-    if (isOnCart) {
-      alert("Ya tienes este producto en el carrito. Solo se permite una unidad.");
+  const handleAddToCart = async () => {
+    if (!user?.login) {
+      Swal.fire({
+        title: "Inicia sesión para continuar",
+        text: "Necesitas iniciar sesión para agregar productos al carrito.",
+        icon: "info",
+        confirmButtonText: "Ir a login",
+        confirmButtonColor: "#000",
+      }).then((res) => {
+        if (res.isConfirmed) router.push("/login");
+      });
       return;
     }
 
-    const confirmAdd = confirm("¿Deseas agregar este producto al carrito?");
-    if (confirmAdd) {
+    if (isOnCart) {
+      Swal.fire({
+        icon: "warning",
+        title: "Producto duplicado",
+        text: "Ya tienes este producto en el carrito. Solo se permite una unidad.",
+        confirmButtonColor: "#000",
+      });
+      return;
+    }
+
+    // Confirmación de agregado
+    const result = await Swal.fire({
+      title: "¿Agregar al carrito?",
+      text: `¿Deseas agregar "${name}" al carrito?`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Sí, agregar",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#000",
+      cancelButtonColor: "#555",
+    });
+
+    if (result.isConfirmed) {
       const newItem = { id, name, price, quantity: 1 };
 
       if (Array.isArray(cart)) {
@@ -38,15 +66,15 @@ const handleAddToCart = () => {
         setCart([newItem]);
       }
 
-      alert("¡Producto agregado al carrito!");
+      Swal.fire({
+        icon: "success",
+        title: "Producto agregado",
+        text: `"${name}" se agregó correctamente al carrito.`,
+        timer: 1500,
+        showConfirmButton: false,
+      });
     }
-  } else {
-    alert("Por favor inicia sesión para agregar productos al carrito");
-    setTimeout(() => {
-      router.push("/login");
-    }, 1000);
-  }
-};
+  };
 
   return (
     <article className="backdrop-blur-md bg-white/30 dark:bg-black/30 text-black dark:text-white rounded-3xl shadow-xl p-6 mt-12 mb-12 max-w-6xl mx-auto border border-black/20 dark:border-white/20 transition-colors">
