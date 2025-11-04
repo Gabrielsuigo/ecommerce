@@ -3,7 +3,7 @@ import CartDetail from "@/components/CartDetail/CartDetail";
 
 const page = () => {
   return (
-    //
+    
     <AuthProtected>
       <CartDetail />
     </AuthProtected>
