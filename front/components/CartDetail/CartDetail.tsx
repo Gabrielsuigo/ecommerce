@@ -5,10 +5,9 @@ import { postOrders } from "@/service/orders";
 import { useState } from "react";
 import Swal from "sweetalert2";
 
-
 const CartDetail = () => {
   const { user, orders, setOrders } = useAuth();
-  const { cart, emptyCart } = useCart();
+  const { cart, emptyCart, removeFromCart } = useCart();
 
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const [loading, setIsLoading] = useState(false);
@@ -27,13 +26,11 @@ const CartDetail = () => {
       };
       setOrders([...orders, newOrder]);
 
-      // Datos completos de pedido
       const fullOrderData = {
         user: {
           id: user?.user,
           name: user?.user.name,
           email: user?.user.email,
-
         },
         products: cart,
         total: total,
@@ -41,76 +38,83 @@ const CartDetail = () => {
         date: new Date().toISOString(),
       };
 
-      // Guardado orden completa
-      localStorage.setItem(
-        `compra-${user?.user.id}-${res.id}`,
-        JSON.stringify(fullOrderData)
-      );
+      localStorage.setItem(`compra-${user?.user.id}-${res.id}`, JSON.stringify(fullOrderData));
 
-      // Actualizo historial de órdenes
-      const prevOrders = JSON.parse(
-        localStorage.getItem(`orders-${user?.user.id}`) || "[]"
-      );
-      localStorage.setItem(
-        `orders-${user?.user.id}`,
-        JSON.stringify([...prevOrders, newOrder])
-      );
+      const prevOrders = JSON.parse(localStorage.getItem(`orders-${user?.user.id}`) || "[]");
+      localStorage.setItem(`orders-${user?.user.id}`, JSON.stringify([...prevOrders, newOrder]));
 
-      // Guardo usuario
-  Swal.fire({
-  title: "Pedido realizado",
-  text: `Order ID: ${res.id}`,
-  icon: "success",
-  confirmButtonText: "Aceptar",
-});
+      Swal.fire({
+        title: "Pedido realizado",
+        text: `Order ID: ${res.id}`,
+        icon: "success",
+        confirmButtonText: "Aceptar",
+      });
       emptyCart();
     } else {
-      alert("Error al procesar la orden");
+      Swal.fire({
+        title: "Error",
+        text: "Error al procesar la orden",
+        icon: "error",
+        confirmButtonText: "Aceptar",
+      });
     }
 
     setIsLoading(false);
   };
 
+  const handleRemove = (id: number, name: string) => {
+    Swal.fire({
+      title: `¿Eliminar ${name}?`,
+      text: "No podrás deshacer esta acción",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        removeFromCart(id);
+        Swal.fire({
+          title: "Eliminado",
+          text: `${name} fue eliminado del carrito`,
+          icon: "success",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+      }
+    });
+  };
+
   return (
     <div className="max-w-4xl mx-auto my-16 px-6 py-12 bg-white dark:bg-black text-black dark:text-white rounded-3xl border border-gray-300 dark:border-gray-700 shadow-xl transition-colors">
       <div className="text-center mb-10">
-        <h2 className="text-4xl font-bold tracking-tight">🛒 Tu Carrito </h2>
-
-        <p className="text-gray-600 dark:text-gray-400 mt-2">
-          Revisa los productos antes de comprar
-        </p>
+        <h2 className="text-4xl font-bold tracking-tight">🛒 Tu Carrito</h2>
+        <p className="text-gray-600 dark:text-gray-400 mt-2">Revisa los productos antes de comprar</p>
       </div>
 
       {cart?.length === 0 ? (
-        <h3 className="text-center text-gray-500 dark:text-gray-400">
-          Tu carrito está vacío
-        </h3>
+        <h3 className="text-center text-gray-500 dark:text-gray-400">Tu carrito está vacío</h3>
       ) : (
         <div className="space-y-6">
-          {cart.map((item, i) => (
+          {cart.map((item) => (
             <div
-              key={i}
+              key={item.id}
               className="flex justify-between items-center bg-gray-100 dark:bg-gray-900 p-6 rounded-xl border border-gray-300 dark:border-gray-700"
             >
-                  <div className="flex items-center gap-4">
-
-        <img
-  src={item.image}
-  alt={item.name}
-  className="w-16 h-16 object-cover rounded-lg border border-gray-300 dark:border-gray-700"
-/>
-</div>
-                
-              <div>
-                <p className="text-lg font-medium">{item.name}</p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Cantidad: {item.quantity}
-                </p>
+              <div className="flex items-center gap-4">
+                <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-lg border border-gray-300 dark:border-gray-700" />
+                <div>
+                  <p className="text-lg font-medium">{item.name}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Cantidad: {item.quantity}</p>
+                </div>
               </div>
-              <div className="text-right">
-                <p className="text-lg font-semibold">
-                  ${(item.price * item.quantity).toFixed(2)}
-                </p>
+              <div className="flex flex-col items-end gap-2">
+                <p className="text-lg font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
+                <button
+                  onClick={() => handleRemove(item.id, item.name)}
+                  className="text-red-500 hover:text-red-700 text-sm font-medium"
+                >
+                  Eliminar
+                </button>
               </div>
             </div>
           ))}
@@ -131,7 +135,6 @@ const CartDetail = () => {
           >
             {loading ? "Procesando..." : "Comprar"}
           </button>
-    
         </div>
       </div>
     </div>

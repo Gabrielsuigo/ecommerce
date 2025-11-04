@@ -8,26 +8,25 @@ export interface Cart {
   name: string;
   price: number;
   quantity: number;
-  image: string; 
-
+  image: string;
 }
 
 interface CartContextProps {
   cart: Cart[];
   setCart: (cart: Cart[]) => void;
   addToCart: (product: Cart) => void;
+  removeFromCart: (id: number) => void;
   emptyCart: () => void;
-  
 }
 
 const CartContext = createContext<CartContextProps>({
   cart: [],
   setCart: () => {},
   addToCart: () => {},
-  emptyCart: () => {},
-  
-});
+  removeFromCart: () => {},
 
+  emptyCart: () => {},
+});
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [cart, setCart] = useState<Cart[]>([]);
@@ -40,7 +39,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
-     
+
           setCart(parsed.items || []);
         } catch {
           setCart([]);
@@ -69,21 +68,26 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     setCart([]);
   };
 
-
   const addToCart = (product: Cart) => {
     setCart((prev) => {
       const existing = prev.find((item) => item.id === product.id);
       if (existing) {
         return prev.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + product.quantity } : item
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + product.quantity }
+            : item
         );
       }
       return [...prev, product];
     });
   };
 
+    const removeFromCart = (id: number) => {
+    setCart((prev) => prev.filter((item) => item.id !== id));
+  };
+
   return (
-    <CartContext.Provider value={{ cart, setCart, addToCart, emptyCart }}>
+    <CartContext.Provider value={{ cart, setCart, addToCart,removeFromCart, emptyCart }}>
       {children}
     </CartContext.Provider>
   );
