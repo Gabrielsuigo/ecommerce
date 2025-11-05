@@ -9,6 +9,9 @@ import { useCart } from "@/contexts/CartContext";
 import { Button } from "@mui/material";
 import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
 
+// Import SweetAlert2
+import Swal from "sweetalert2";
+
 interface ProductDetailProps {
   product: Product;
 }
@@ -20,13 +23,21 @@ const ProductDetail = ({ product }: ProductDetailProps) => {
   const { id, name, price, image, description } = product;
 
   const isOnCart = cart?.some((item) => item.id === id);
-// manejo añadir al carrito
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (user?.login) {
-      const confirmAdd = confirm("¿Deseas agregar este producto al carrito?");
-      if (confirmAdd) {
-        const newItem = { id, name, price, quantity: 1 };
+      // Reemplazamos confirm por Swal
+      const result = await Swal.fire({
+        title: '¿Deseas agregar este producto al carrito?',
+        text: name,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, agregar',
+        cancelButtonText: 'Cancelar',
+      });
+
+      if (result.isConfirmed) {
+        const newItem = { id, name, price, quantity: 1, image };
 
         if (Array.isArray(cart)) {
           setCart([...cart, newItem]);
@@ -34,19 +45,29 @@ const ProductDetail = ({ product }: ProductDetailProps) => {
           setCart([newItem]);
         }
 
-        alert("¡Producto agregado al carrito!");
+        // Reemplazamos alert por Swal
+        Swal.fire({
+          title: '¡Producto agregado!',
+          text: `${name} se ha añadido a tu carrito`,
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false,
+        });
       }
     } else {
-      alert("Por favor inicia sesión para agregar productos al carrito");
-      setTimeout(() => {
+      // Usuario no logueado
+      Swal.fire({
+        title: 'Inicia sesión',
+        text: 'Por favor inicia sesión para agregar productos al carrito',
+        icon: 'warning',
+        confirmButtonText: 'Ir a login',
+      }).then(() => {
         router.push("/login");
-      }, 1000);
+      });
     }
   };
 
   return (
-
-
     <article className="backdrop-blur-md bg-white/30 dark:bg-black/30 text-black dark:text-white rounded-3xl shadow-xl p-6 mt-12 mb-12 max-w-6xl mx-auto border border-black/20 dark:border-white/20 transition-colors">
       <h1 className="text-4xl font-bold mb-6 tracking-tight">{name}</h1>
       <div className="flex flex-col lg:flex-row gap-8">
@@ -54,7 +75,7 @@ const ProductDetail = ({ product }: ProductDetailProps) => {
           src={image}
           alt={name}
           className="w-full lg:w-1/2 rounded-2xl shadow-md object-cover border border-gray-300 dark:border-gray-700"
-          />
+        />
         <div className="flex flex-col justify-between lg:w-1/2 min-h-[400px]">
           <div>
             <p className="text-lg font-semibold text-black dark:text-gray-300 mb-2">
@@ -67,8 +88,7 @@ const ProductDetail = ({ product }: ProductDetailProps) => {
 
           <div className="mt-auto pt-6 flex justify-between items-center">
             <p className="text-xl font-semibold">
-              Precio:{" "}
-              <span className="text-black dark:text-white">u$s {price}</span>
+              Precio: <span className="text-black dark:text-white">u$s {price}</span>
             </p>
 
             <Button
@@ -88,7 +108,7 @@ const ProductDetail = ({ product }: ProductDetailProps) => {
                 px: 2,
                 py: 1.5,
               }}
-              >
+            >
               {isOnCart ? "Ir al carrito" : "Añadir al carrito"}
             </Button>
           </div>
