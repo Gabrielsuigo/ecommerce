@@ -10,6 +10,7 @@ import {
 import { register } from "@/service/auth";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect, FormEvent } from "react";
+import Swal from "sweetalert2"; // 👈 Importamos SweetAlert2
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -48,12 +49,29 @@ export default function RegisterForm() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const res = await register(data);
+
     if (res.statusCode) {
-      alert(res.message);
+      // 🔴 Mostrar error con SweetAlert2
+      Swal.fire({
+        title: "Error en el registro",
+        text: res.message || "Ocurrió un problema al crear la cuenta.",
+        icon: "error",
+        confirmButtonText: "Entendido",
+        confirmButtonColor: "#000",
+      });
     } else {
-      alert("Registro exitoso");
-      router.push("/login");
+      // 🟢 Registro exitoso
+      Swal.fire({
+        title: "¡Registro exitoso!",
+        text: "Tu cuenta ha sido creada correctamente.",
+        icon: "success",
+        confirmButtonText: "Ir al login",
+        confirmButtonColor: "#000",
+      }).then(() => {
+        router.push("/login");
+      });
     }
   };
 
@@ -67,7 +85,6 @@ export default function RegisterForm() {
     });
   }, [data]);
 
-  // Array de inputs para renderizado dinámico
   const inputs = [
     { name: "name", label: "Nombre completo", type: "text", placeholder: "Juan Pérez", error: errors.name, dirty: dirty.name },
     { name: "email", label: "Email", type: "email", placeholder: "nombre@correo.com", error: errors.email, dirty: dirty.email },
@@ -89,7 +106,6 @@ export default function RegisterForm() {
           </p>
         </div>
 
-        {/* Renderizado dinámico de inputs */}
         {inputs.map((input) => (
           <div key={input.name}>
             <label htmlFor={input.name} className="block text-sm font-medium">

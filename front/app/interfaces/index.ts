@@ -44,6 +44,8 @@ interface UserSessionData {
   role: string;
   credential: credential;
   orders: Order[];
+    lastLogin?: string; // 🆕 <-- agregar esta línea
+
 }
 
 export interface Order {
