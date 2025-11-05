@@ -6,8 +6,9 @@ import { CartProvider } from "@/contexts/CartContext";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "apple store",
+  title: "Apple store",
   description: "Henry",
+  icons: "/apple-logo.png"
 };
 
 export default function RootLayout({
