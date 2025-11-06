@@ -46,28 +46,3 @@ const LoginForm = () => {
 
 export default LoginForm;
 
-
-
-// "use client";
-
-// import { useState } from "react";
-
-// const page = () => {
-//   const [id, setId] = useState("");
-
-//   const handleSubmit = () => {
-//     console.log(id);
-//   };
-
-//   return (
-//     <div>
-//       <form onSubmit={handleSubmit}>
-//         <input type="text" value={id} onChange={(e) => setId(e.target.value)} />
-
-//         <button type="submit"> BUSCAR</button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default page;
